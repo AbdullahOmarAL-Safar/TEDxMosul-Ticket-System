@@ -1,0 +1,866 @@
+/* ========================================
+   TEDx Admin Dashboard - Modern Design System
+   ======================================== */
+
+/* CSS Variables */
+:root {
+    --tedx-red: #e62b1e;
+    --tedx-red-hover: #c51000;
+    --tedx-red-light: #ff4b2b;
+    --tedx-gradient: linear-gradient(135deg, #e62b1e 0%, #ff4b2b 100%);
+
+    --text-dark: #222222;
+    --text-medium: #444444;
+    --text-muted: #888888;
+    --text-light: #aaaaaa;
+
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f8f8;
+    --bg-tertiary: #fafafa;
+    --bg-hover: #fff3f3;
+
+    --border-light: #e0e0e0;
+    --border-medium: #d0d0d0;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-base: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    --sidebar-width: 280px;
+    --header-height: 64px;
+    --spacing-unit: 8px;
+
+    --transition-fast: 0.15s ease-in-out;
+    --transition-base: 0.2s ease-in-out;
+    --transition-slow: 0.3s ease-in-out;
+}
+
+/* Layout Structure */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg-secondary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-dark);
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-primary);
+    border-right: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1030;
+    box-shadow: var(--shadow-base);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Sidebar Header */
+.admin-sidebar-header {
+    padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 3);
+    background: var(--tedx-gradient);
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-sidebar-header h2 {
+    font-size: 28px;
+    font-weight: 900;
+    margin: 0 0 4px 0;
+    color: var(--bg-primary);
+    letter-spacing: -0.5px;
+}
+
+.admin-sidebar-header p {
+    margin: 0;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+
+
+/* Sidebar Footer */
+.admin-sidebar-footer {
+    padding: calc(var(--spacing-unit) * 2.5);
+    border-top: 1px solid var(--border-light);
+    background: var(--bg-primary);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+    position: sticky;
+    bottom: 0;
+}
+
+.admin-user-info {
+    text-align: center;
+    padding: calc(var(--spacing-unit) * 2);
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    border: 1px solid var(--border-light);
+}
+
+/* Main Content Area */
+.admin-content {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    padding: calc(var(--spacing-unit) * 4);
+    min-height: 100vh;
+    max-width: 1600px;
+    width: 100%;
+}
+
+/* ========================================
+   Stats Cards
+   ======================================== */
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: calc(var(--spacing-unit) * 3);
+    margin-bottom: calc(var(--spacing-unit) * 4);
+}
+
+.admin-stat-card {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: calc(var(--spacing-unit) * 3);
+    box-shadow: var(--shadow-base);
+    border: 1px solid var(--border-light);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--tedx-gradient);
+    transition: width var(--transition-base);
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.admin-stat-card:hover::before {
+    width: 8px;
+}
+
+.admin-stat-icon {
+    font-size: 40px;
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    display: inline-block;
+    transition: transform var(--transition-base);
+}
+
+.admin-stat-card:hover .admin-stat-icon {
+    transform: scale(1.1);
+}
+
+.admin-stat-value {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 calc(var(--spacing-unit) * 0.5) 0;
+    line-height: 1;
+}
+
+.admin-stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+}
+
+/* ========================================
+   Table Styles - Modern & Clean
+   ======================================== */
+.admin-table-container {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    box-shadow: var(--shadow-base);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    margin-bottom: calc(var(--spacing-unit) * 4);
+}
+
+.admin-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 3);
+    background: var(--bg-tertiary);
+    border-bottom: 3px solid var(--tedx-red);
+}
+
+.admin-table-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    letter-spacing: -0.3px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Sticky Header with Gradient */
+.admin-table thead {
+    background: linear-gradient(to bottom, var(--bg-tertiary), var(--bg-primary));
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.admin-table th {
+    padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 2px solid var(--border-light);
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-medium);
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+/* Zebra Striping */
+.admin-table tbody tr:nth-child(even) {
+    background: var(--bg-tertiary);
+}
+
+.admin-table tbody tr:nth-child(odd) {
+    background: var(--bg-primary);
+}
+
+/* Hover Effect */
+.admin-table tbody tr {
+    transition: all var(--transition-fast);
+}
+
+.admin-table tbody tr:hover {
+    background: var(--bg-hover) !important;
+    transform: scale(1.005);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ========================================
+   Action Buttons
+   ======================================== */
+.admin-actions {
+    display: flex;
+    gap: calc(var(--spacing-unit) * 1);
+    align-items: center;
+}
+
+.admin-action-btn {
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+    border-radius: 6px;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--spacing-unit) * 0.5);
+    white-space: nowrap;
+}
+
+.admin-action-btn-edit {
+    background: var(--info);
+    color: white;
+}
+
+.admin-action-btn-edit:hover {
+    background: #0052a3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);
+}
+
+.admin-action-btn-delete {
+    background: var(--tedx-red);
+    color: white;
+}
+
+.admin-action-btn-delete:hover {
+    background: var(--tedx-red-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(230, 43, 30, 0.4);
+}
+
+/* ========================================
+   Modal System
+   ======================================== */
+.admin-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    animation: fadeIn var(--transition-base);
+    padding: calc(var(--spacing-unit) * 2);
+}
+
+.admin-modal {
+    background: var(--bg-primary);
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-xl);
+    animation: slideUp var(--transition-slow);
+    border: 1px solid var(--border-light);
+}
+
+/* Modal Header */
+.admin-modal-header {
+    padding: calc(var(--spacing-unit) * 3);
+    border-bottom: 2px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, var(--bg-primary), var(--bg-tertiary));
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.admin-modal-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: -0.3px;
+}
+
+.admin-modal-close {
+    background: var(--bg-secondary);
+    border: none;
+    font-size: 24px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all var(--transition-base);
+}
+
+.admin-modal-close:hover {
+    background: var(--tedx-red);
+    color: white;
+    transform: rotate(90deg);
+}
+
+.admin-modal-body {
+    padding: calc(var(--spacing-unit) * 3);
+}
+
+.admin-modal-footer {
+    padding: calc(var(--spacing-unit) * 2.5) calc(var(--spacing-unit) * 3);
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: flex-end;
+    gap: calc(var(--spacing-unit) * 1.5);
+    background: var(--bg-tertiary);
+    position: sticky;
+    bottom: 0;
+}
+
+/* ========================================
+   Form Elements
+   ======================================== */
+.admin-form-group {
+    margin-bottom: calc(var(--spacing-unit) * 2.5);
+}
+
+.admin-form-label {
+    display: block;
+    margin-bottom: calc(var(--spacing-unit) * 1);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-form-input,
+.admin-form-textarea,
+.admin-form-select {
+    width: 100%;
+    padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: all var(--transition-base);
+    background: var(--bg-primary);
+    color: var(--text-dark);
+}
+
+.admin-form-input:hover,
+.admin-form-textarea:hover,
+.admin-form-select:hover {
+    border-color: var(--border-medium);
+}
+
+.admin-form-input:focus,
+.admin-form-textarea:focus,
+.admin-form-select:focus {
+    outline: none;
+    border-color: var(--tedx-red);
+    box-shadow: 0 0 0 3px rgba(230, 43, 30, 0.1);
+    background: var(--bg-primary);
+}
+
+.admin-form-textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.admin-form-input::placeholder,
+.admin-form-textarea::placeholder {
+    color: var(--text-light);
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Fade-in for page content */
+.admin-content>* {
+    animation: slideInRight 0.4s ease-out;
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 240px;
+    }
+
+    .admin-sidebar {
+        width: var(--sidebar-width);
+    }
+
+    .admin-content {
+        margin-left: var(--sidebar-width);
+        padding: calc(var(--spacing-unit) * 3);
+    }
+
+    .admin-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: calc(var(--spacing-unit) * 2);
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+        font-size: 13px;
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        position: relative;
+        border-right: none;
+        border-bottom: 2px solid var(--border-light);
+        max-height: none;
+    }
+
+    .admin-sidebar-header {
+        padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 2);
+    }
+
+    .admin-sidebar-header h2 {
+        font-size: 24px;
+    }
+
+
+    .admin-content {
+        margin-left: 0;
+        padding: calc(var(--spacing-unit) * 2);
+    }
+
+    .admin-page-title {
+        font-size: 26px;
+    }
+
+    .admin-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-table-container {
+        overflow-x: auto;
+    }
+
+    .admin-table {
+        min-width: 600px;
+    }
+
+    .admin-modal {
+        max-width: 100%;
+        margin: calc(var(--spacing-unit) * 2);
+    }
+
+    .admin-actions {
+        flex-direction: column;
+        gap: calc(var(--spacing-unit) * 0.5);
+    }
+
+    .admin-action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .admin-stat-card {
+        padding: calc(var(--spacing-unit) * 2);
+    }
+
+    .admin-stat-value {
+        font-size: 32px;
+    }
+
+    .admin-table-header {
+        flex-direction: column;
+        gap: calc(var(--spacing-unit) * 1.5);
+        align-items: stretch;
+    }
+
+    .admin-modal-header {
+        padding: calc(var(--spacing-unit) * 2);
+    }
+
+    .admin-modal-body {
+        padding: calc(var(--spacing-unit) * 2);
+    }
+
+    .admin-modal-footer {
+        padding: calc(var(--spacing-unit) * 2);
+        flex-direction: column;
+    }
+
+    .admin-modal-footer .btn {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   DARK MODE THEME
+   ======================================== */
+
+.dark {
+    /* Override colors for dark mode */
+    --text-dark: #e8e8e8;
+    --text-medium: #b8b8b8;
+    --text-muted: #888888;
+    --text-light: #666666;
+
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #121212;
+    --bg-tertiary: #242424;
+    --bg-hover: #2a1a1a;
+
+    --border-light: #2a2a2a;
+    --border-medium: #333333;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-base: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* Dark Mode - Sidebar */
+.dark .admin-sidebar {
+    background: var(--bg-primary);
+    border-right-color: var(--border-light);
+}
+
+.dark .admin-sidebar-header {
+    background: linear-gradient(135deg, #1a1410 0%, #2a1e18 100%);
+    border-bottom-color: var(--border-light);
+}
+
+.dark .admin-nav-link {
+    color: var(--text-medium);
+}
+
+.dark .admin-nav-link:hover {
+    background: var(--bg-tertiary);
+    color: var(--tedx-red-light);
+}
+
+.dark .admin-nav-link.active {
+    background: var(--tedx-gradient);
+    color: white;
+}
+
+.dark .admin-sidebar-footer {
+    background: var(--bg-primary);
+    border-top-color: var(--border-light);
+}
+
+/* Dark Mode - Main Content */
+.dark .admin-content {
+    background: var(--bg-secondary);
+}
+
+/* Dark Mode - Stats Cards */
+.dark .admin-stat-card {
+    background: var(--bg-primary);
+    border-color: var(--border-light);
+}
+
+.dark .admin-stat-card:hover {
+    background: var(--bg-tertiary);
+    box-shadow: var(--shadow-lg);
+}
+
+.dark .admin-stat-value {
+    color: var(--text-dark);
+}
+
+.dark .admin-stat-label {
+    color: var(--text-muted);
+}
+
+/* Dark Mode - Tables */
+.dark .admin-table-container {
+    background: var(--bg-primary);
+    border-color: var(--border-light);
+}
+
+.dark .admin-table-header {
+    border-bottom-color: var(--border-light);
+}
+
+.dark .admin-table-header h3 {
+    color: var(--text-dark);
+}
+
+.dark .admin-table {
+    color: var(--text-medium);
+}
+
+.dark .admin-table thead {
+    background: linear-gradient(135deg, #2a1e18 0%, #3a2818 100%);
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.dark .admin-table tbody tr {
+    border-bottom-color: var(--border-light);
+}
+
+.dark .admin-table tbody tr:nth-child(even) {
+    background: var(--bg-tertiary);
+}
+
+.dark .admin-table tbody tr:hover {
+    background: var(--bg-hover);
+}
+
+/* Dark Mode - Buttons */
+.dark .btn {
+    border-color: var(--border-medium);
+}
+
+.dark .btn-outline {
+    color: var(--text-medium);
+    border-color: var(--border-medium);
+    background: transparent;
+}
+
+.dark .btn-outline:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-dark);
+}
+
+.dark .btn-danger {
+    background: #c41e17;
+}
+
+.dark .btn-danger:hover {
+    background: #a01812;
+}
+
+/* Dark Mode - Modals */
+.dark .admin-modal-overlay {
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.dark .admin-modal {
+    background: var(--bg-primary);
+    border-color: var(--border-medium);
+}
+
+.dark .admin-modal-header {
+    background: linear-gradient(135deg, #2a1e18 0%, #3a2818 100%);
+    border-bottom-color: var(--border-light);
+}
+
+.dark .admin-modal-title {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.dark .admin-modal-body {
+    background: var(--bg-primary);
+}
+
+.dark .admin-modal-footer {
+    background: var(--bg-tertiary);
+    border-top-color: var(--border-light);
+}
+
+/* Dark Mode - Forms */
+.dark .admin-form-label {
+    color: var(--text-medium);
+}
+
+.dark .admin-form-input,
+.dark .admin-form-textarea,
+.dark .admin-form-select {
+    background: var(--bg-tertiary);
+    border-color: var(--border-medium);
+    color: var(--text-dark);
+}
+
+.dark .admin-form-input::placeholder,
+.dark .admin-form-textarea::placeholder {
+    color: var(--text-light);
+}
+
+.dark .admin-form-input:hover,
+.dark .admin-form-textarea:hover,
+.dark .admin-form-select:hover {
+    border-color: var(--border-light);
+    background: var(--bg-primary);
+}
+
+.dark .admin-form-input:focus,
+.dark .admin-form-textarea:focus,
+.dark .admin-form-select:focus {
+    background: var(--bg-primary);
+    border-color: var(--tedx-red);
+    box-shadow: 0 0 0 3px rgba(230, 43, 30, 0.2);
+}
+
+/* Dark Mode - Messages */
+.dark .admin-message {
+    border-color: var(--border-medium);
+}
+
+.dark .admin-message.success {
+    background: rgba(46, 125, 50, 0.2);
+    border-color: #2e7d32;
+    color: #81c784;
+}
+
+.dark .admin-message.error {
+    background: rgba(211, 47, 47, 0.2);
+    border-color: #c62828;
+    color: #ef5350;
+}
+
+/* Dark Mode - Loading Spinner */
+.dark .loading {
+    color: var(--text-medium);
+}
+
+.dark .spinner {
+    border-color: var(--border-medium);
+    border-top-color: var(--tedx-red);
+}
+
+/* Dark Mode - User Info */
+.dark .admin-user-info {
+    background: var(--bg-tertiary);
+}

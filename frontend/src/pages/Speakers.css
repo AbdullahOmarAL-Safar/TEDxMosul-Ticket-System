@@ -1,0 +1,720 @@
+/* ============================================
+   TEDxMosul Speakers Page - Modern Design
+   ============================================ */
+
+.speakers-page {
+    min-height: 100vh;
+    background: #ffffff;
+}
+
+/* ============================================
+   Hero Banner Section with Logo
+   ============================================ */
+
+.speakers-hero {
+    position: relative;
+    height: 500px;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #e62b1e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 24px;
+    margin: 32px 0 64px;
+    box-shadow: 0 20px 60px rgba(230, 43, 30, 0.3);
+}
+
+.speakers-hero-image-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.speakers-hero-logo {
+    max-width: 500px;
+    max-height: 250px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 60px rgba(230, 43, 30, 0.8)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.5)) drop-shadow(0 10px 40px rgba(230, 43, 30, 0.6));
+    animation: heroLogoFloat 6s ease-in-out infinite, heroGlow 3s ease-in-out infinite;
+}
+
+.speakers-hero-logo-fallback {
+    display: none;
+}
+
+.speakers-hero-tedx {
+    font-size: 6rem;
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: -2px;
+    text-shadow: 0 0 40px rgba(255, 255, 255, 1),
+        0 0 80px rgba(230, 43, 30, 0.8),
+        0 4px 12px rgba(255, 255, 255, 0.9);
+    animation: textGlow 3s ease-in-out infinite;
+}
+
+.ted-text {
+    color: #ffffff;
+    text-shadow: 0 0 40px rgba(255, 255, 255, 1),
+        0 0 20px rgba(255, 255, 255, 0.8);
+}
+
+.x-text {
+    color: #e62b1e;
+    font-size: 5rem;
+    vertical-align: super;
+    text-shadow: 0 0 60px rgba(230, 43, 30, 1),
+        0 0 30px rgba(230, 43, 30, 0.8),
+        0 0 90px rgba(255, 68, 51, 0.6);
+    animation: xGlow 2s ease-in-out infinite;
+}
+
+.mosul-text {
+    color: #ffffff;
+    font-weight: 300;
+    margin-left: 8px;
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.9),
+        0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+.speakers-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(230, 43, 30, 0.3) 100%);
+    z-index: 2;
+    animation: overlayPulse 4s ease-in-out infinite;
+}
+
+.speakers-hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 0 20px;
+    margin-top: 180px;
+}
+
+.speakers-hero-tagline {
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: #ffffff;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 0;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 1),
+        0 0 60px rgba(230, 43, 30, 0.6),
+        0 4px 20px rgba(255, 255, 255, 0.8);
+    animation: fadeInUp 1s ease-out 0.3s both, taglineGlow 3s ease-in-out infinite;
+}
+
+@keyframes heroLogoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes heroGlow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 60px rgba(230, 43, 30, 0.8)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.5)) drop-shadow(0 10px 40px rgba(230, 43, 30, 0.6));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 100px rgba(230, 43, 30, 1)) drop-shadow(0 0 50px rgba(255, 255, 255, 0.8)) drop-shadow(0 15px 60px rgba(230, 43, 30, 0.9));
+    }
+}
+
+@keyframes textGlow {
+
+    0%,
+    100% {
+        text-shadow: 0 0 40px rgba(255, 255, 255, 1),
+            0 0 80px rgba(230, 43, 30, 0.8),
+            0 4px 12px rgba(255, 255, 255, 0.9);
+    }
+
+    50% {
+        text-shadow: 0 0 60px rgba(255, 255, 255, 1),
+            0 0 120px rgba(230, 43, 30, 1),
+            0 6px 16px rgba(255, 255, 255, 1);
+    }
+}
+
+@keyframes xGlow {
+
+    0%,
+    100% {
+        text-shadow: 0 0 60px rgba(230, 43, 30, 1),
+            0 0 30px rgba(230, 43, 30, 0.8),
+            0 0 90px rgba(255, 68, 51, 0.6);
+    }
+
+    50% {
+        text-shadow: 0 0 100px rgba(230, 43, 30, 1),
+            0 0 50px rgba(255, 255, 255, 0.9),
+            0 0 150px rgba(255, 68, 51, 0.9);
+    }
+}
+
+@keyframes taglineGlow {
+
+    0%,
+    100% {
+        text-shadow: 0 0 30px rgba(255, 255, 255, 1),
+            0 0 60px rgba(230, 43, 30, 0.6),
+            0 4px 20px rgba(255, 255, 255, 0.8);
+    }
+
+    50% {
+        text-shadow: 0 0 50px rgba(255, 255, 255, 1),
+            0 0 100px rgba(230, 43, 30, 0.9),
+            0 6px 30px rgba(255, 255, 255, 1);
+    }
+}
+
+@keyframes overlayPulse {
+
+    0%,
+    100% {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(230, 43, 30, 0.3) 100%);
+    }
+
+    50% {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(230, 43, 30, 0.4) 100%);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Page Title Section
+   ============================================ */
+
+.speakers-title-section {
+    padding: 80px 0 60px;
+    background: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.speakers-main-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #000000;
+    text-align: center;
+    margin: 0 0 20px;
+    letter-spacing: -2px;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.speakers-main-title::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: #e62b1e;
+    border-radius: 2px;
+}
+
+.speakers-subtitle {
+    font-size: 1.25rem;
+    color: #666666;
+    text-align: center;
+    max-width: 800px;
+    margin: 30px auto 0;
+    line-height: 1.8;
+    font-weight: 400;
+}
+
+/* ============================================
+   Speakers Grid Section
+   ============================================ */
+
+.speakers-grid-section {
+    padding: 80px 0 120px;
+    background: #fafafa;
+}
+
+.speakers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   Speaker Card - Modern & Elegant
+   ============================================ */
+
+.speaker-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeInCard 0.6s ease-out both;
+    position: relative;
+}
+
+.speaker-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(230, 43, 30, 0.15);
+}
+
+.speaker-card:hover .speaker-photo {
+    transform: scale(1.05);
+}
+
+.speaker-card:hover .speaker-photo-border {
+    border-color: #e62b1e;
+    opacity: 1;
+}
+
+.speaker-card:hover .speaker-card-accent {
+    width: 100%;
+}
+
+@keyframes fadeInCard {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.speaker-card-inner {
+    padding: 40px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+/* ============================================
+   Speaker Photo with Border Animation
+   ============================================ */
+
+.speaker-photo-wrapper {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin-bottom: 24px;
+}
+
+.speaker-photo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 2;
+}
+
+.speaker-photo-border {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: calc(100% + 16px);
+    height: calc(100% + 16px);
+    border-radius: 50%;
+    border: 3px solid transparent;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+    opacity: 0;
+}
+
+/* ============================================
+   Speaker Info
+   ============================================ */
+
+.speaker-info {
+    width: 100%;
+}
+
+.speaker-name {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #000000;
+    margin: 0 0 12px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+.speaker-event-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #e62b1e 0%, #ff4433 100%);
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(230, 43, 30, 0.25);
+}
+
+.speaker-bio {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #555555;
+    margin: 0 0 20px;
+    min-height: 80px;
+}
+
+/* ============================================
+   Social Links
+   ============================================ */
+
+.speaker-social {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: auto;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    color: #333333;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+}
+
+.social-link:hover {
+    background: #e62b1e;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(230, 43, 30, 0.3);
+}
+
+.social-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* ============================================
+   Card Accent Line (Hover Effect)
+   ============================================ */
+
+.speaker-card-accent {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #e62b1e 0%, #ff4433 100%);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   Loading & Empty States
+   ============================================ */
+
+.speakers-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 20px;
+}
+
+.speakers-loading p {
+    margin-top: 20px;
+    font-size: 1.125rem;
+    color: #666666;
+}
+
+.speakers-empty-state {
+    text-align: center;
+    padding: 100px 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.empty-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    opacity: 0.6;
+}
+
+.speakers-empty-state h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 12px;
+}
+
+.speakers-empty-state p {
+    font-size: 1.125rem;
+    color: #666666;
+    line-height: 1.6;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .speakers-hero {
+        height: 450px;
+    }
+
+    .speakers-hero-logo {
+        max-width: 450px;
+        max-height: 220px;
+    }
+
+    .speakers-hero-tedx {
+        font-size: 4.5rem;
+        text-shadow: 0 0 38px rgba(255, 255, 255, 1),
+            0 0 75px rgba(230, 43, 30, 0.8),
+            0 4px 12px rgba(255, 255, 255, 0.9);
+    }
+
+    .x-text {
+        font-size: 3.5rem;
+        text-shadow: 0 0 55px rgba(230, 43, 30, 1),
+            0 0 28px rgba(230, 43, 30, 0.8),
+            0 0 85px rgba(255, 68, 51, 0.6);
+    }
+
+    .speakers-main-title {
+        font-size: 3rem;
+    }
+
+    .speakers-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 32px;
+    }
+
+    .speaker-card-inner {
+        padding: 32px 24px 24px;
+    }
+
+    .speaker-photo-wrapper {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 768px) {
+    .speakers-hero {
+        height: 400px;
+        margin: 24px 0 48px;
+    }
+
+    .speakers-hero-logo {
+        max-width: 350px;
+        max-height: 180px;
+    }
+
+    .speakers-hero-tedx {
+        font-size: 3.5rem;
+        text-shadow: 0 0 35px rgba(255, 255, 255, 1),
+            0 0 70px rgba(230, 43, 30, 0.8),
+            0 4px 12px rgba(255, 255, 255, 0.9);
+    }
+
+    .x-text {
+        font-size: 2.8rem;
+        text-shadow: 0 0 50px rgba(230, 43, 30, 1),
+            0 0 25px rgba(230, 43, 30, 0.8),
+            0 0 75px rgba(255, 68, 51, 0.6);
+    }
+
+    .mosul-text {
+        margin-left: 4px;
+    }
+
+    .speakers-hero-content {
+        margin-top: 140px;
+    }
+
+    .speakers-hero-tagline {
+        font-size: 1.25rem;
+        letter-spacing: 2px;
+        text-shadow: 0 0 25px rgba(255, 255, 255, 1),
+            0 0 50px rgba(230, 43, 30, 0.6),
+            0 4px 20px rgba(255, 255, 255, 0.8);
+    }
+
+    .speakers-title-section {
+        padding: 60px 0 40px;
+    }
+
+    .speakers-main-title {
+        font-size: 2.5rem;
+    }
+
+    .speakers-subtitle {
+        font-size: 1.125rem;
+        padding: 0 20px;
+    }
+
+    .speakers-grid-section {
+        padding: 60px 0 80px;
+    }
+
+    .speakers-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 0 20px;
+    }
+
+    .speaker-card-inner {
+        padding: 32px 24px 24px;
+    }
+
+    .speaker-photo-wrapper {
+        width: 140px;
+        height: 140px;
+    }
+
+    .speaker-name {
+        font-size: 1.5rem;
+    }
+
+    .speaker-bio {
+        font-size: 0.9375rem;
+        min-height: auto;
+    }
+}
+
+/* Small Mobile (< 480px) */
+@media (max-width: 480px) {
+    .speakers-hero-tedx {
+        font-size: 2.5rem;
+    }
+
+    .x-text {
+        font-size: 2rem;
+    }
+
+    .speakers-main-title {
+        font-size: 2rem;
+    }
+
+    .speakers-subtitle {
+        font-size: 1rem;
+    }
+
+    .speaker-card-inner {
+        padding: 28px 20px 20px;
+    }
+
+    .speaker-photo-wrapper {
+        width: 120px;
+        height: 120px;
+    }
+
+    .speaker-name {
+        font-size: 1.375rem;
+    }
+
+    .speaker-event-badge {
+        font-size: 0.8125rem;
+        padding: 6px 12px;
+    }
+
+    .social-link {
+        width: 38px;
+        height: 38px;
+    }
+
+    .social-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+
+@media print {
+    .speakers-hero {
+        height: auto;
+        padding: 40px 0;
+        background: #ffffff;
+    }
+
+    .speakers-hero-overlay {
+        display: none;
+    }
+
+    .speaker-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #e0e0e0;
+    }
+
+    .speaker-social {
+        display: none;
+    }
+}
+
+/* ============================================
+   Accessibility Enhancements
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .speaker-card,
+    .speaker-photo,
+    .social-link,
+    .speaker-card-accent {
+        animation: none;
+        transition: none;
+    }
+}
+
+/* Focus styles for keyboard navigation */
+.social-link:focus-visible {
+    outline: 3px solid #e62b1e;
+    outline-offset: 2px;
+}
