@@ -33,10 +33,13 @@ export interface Seat {
 
 export interface Booking {
     id: number;
-    status: 'confirmed' | 'checked_in' | 'cancelled';
+    status: 'pending' | 'approved' | 'rejected' | 'checked_in' | 'cancelled';
+    ticket_code?: string | null;
     checked_in_at?: string | null;
     event: Event;
     seats?: Seat[];
+    user?: User;
+    created_at?: string;
 }
 
 export interface SeatsStatus {

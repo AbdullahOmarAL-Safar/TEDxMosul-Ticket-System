@@ -59,15 +59,13 @@ export class BookingsService {
             throw new BadRequestException('Not enough available seats');
         }
 
-        // Decrement available seats
-        event.available_seats -= dto.seats.length;
-        await this.eventsRepo.save(event);
-
+        // Note: Seats will be decremented upon admin approval, not immediately
         const booking = this.repo.create({
             user: { id: userId } as any,
             event: { id: dto.eventId } as any,
             seats: dto.seats,
-            status: 'confirmed',
+            status: 'pending', // Awaiting admin approval
+            ticket_code: undefined, // Will be generated after approval
         });
         return this.repo.save(booking);
     }
@@ -88,11 +86,102 @@ export class BookingsService {
     async checkIn(bookingId: number) {
         const b = await this.repo.findOne({ where: { id: bookingId }, relations: ['event', 'user'] });
         if (!b) throw new NotFoundException('Booking not found');
+
+        // Check if booking is approved
+        if (b.status === 'pending') {
+            throw new BadRequestException('Booking is pending admin approval');
+        }
+        if (b.status === 'rejected') {
+            throw new BadRequestException('Booking was rejected');
+        }
+        if (b.status === 'cancelled') {
+            throw new BadRequestException('Booking was cancelled');
+        }
         if (b.status === 'checked_in') return b; // idempotent
 
         b.status = 'checked_in';
         b.checked_in_at = new Date();
         return this.repo.save(b);
+    }
+
+    // Verify booking by ticket code (for QR scanner)
+    async verifyByTicketCode(ticketCode: string) {
+        const booking = await this.repo.findOne({
+            where: { ticket_code: ticketCode },
+            relations: ['event', 'user'],
+        });
+
+        if (!booking) throw new NotFoundException('Invalid ticket code');
+
+        return booking;
+    }
+
+    // Check-in by ticket code
+    async checkInByTicketCode(ticketCode: string) {
+        const booking = await this.verifyByTicketCode(ticketCode);
+        return this.checkIn(booking.id);
+    }
+
+    // Approve booking (admin only)
+    async approve(bookingId: number) {
+        const booking = await this.repo.findOne({
+            where: { id: bookingId },
+            relations: ['event', 'user'],
+        });
+
+        if (!booking) throw new NotFoundException('Booking not found');
+
+        if (booking.status !== 'pending') {
+            throw new BadRequestException(`Booking is already ${booking.status}`);
+        }
+
+        // Check if event still has available seats
+        const event = await this.eventsRepo.findOne({ where: { id: booking.event.id } });
+        if (!event) throw new NotFoundException('Event not found');
+
+        const seatsNeeded = booking.seats?.length || 1;
+        if (event.available_seats < seatsNeeded) {
+            throw new BadRequestException('Not enough available seats to approve this booking');
+        }
+
+        // Decrement available seats upon approval
+        event.available_seats -= seatsNeeded;
+        await this.eventsRepo.save(event);
+
+        // Generate unique ticket code (TEDX-xxxxxx)
+        const { v4: uuidv4 } = require('uuid');
+        const ticketCode = `TEDX-${uuidv4().substring(0, 6).toUpperCase()}`;
+
+        booking.status = 'approved';
+        booking.ticket_code = ticketCode;
+
+        return this.repo.save(booking);
+    }
+
+    // Reject booking (admin only)
+    async reject(bookingId: number) {
+        const booking = await this.repo.findOne({
+            where: { id: bookingId },
+            relations: ['event', 'user'],
+        });
+
+        if (!booking) throw new NotFoundException('Booking not found');
+
+        if (booking.status !== 'pending') {
+            throw new BadRequestException(`Booking is already ${booking.status}`);
+        }
+
+        booking.status = 'rejected';
+
+        // Restore seats to event when rejecting
+        const event = await this.eventsRepo.findOne({ where: { id: booking.event.id } });
+        if (event) {
+            const seatsToRestore = booking.seats?.length || 1;
+            event.available_seats += seatsToRestore;
+            await this.eventsRepo.save(event);
+        }
+
+        return this.repo.save(booking);
     }
 
     // Update booking (only by owner)
@@ -121,7 +210,7 @@ export class BookingsService {
         return this.repo.save(booking);
     }
 
-    // Cancel booking (delete + restore seat)
+    // Cancel booking (delete + restore seat if approved)
     async cancel(bookingId: number, userId: number) {
         const booking = await this.repo.findOne({
             where: { id: bookingId },
@@ -140,13 +229,16 @@ export class BookingsService {
             throw new BadRequestException('Cannot cancel a checked-in booking');
         }
 
-        // Restore seats to event
-        const event = await this.eventsRepo.findOne({ where: { id: booking.event.id } });
-        if (event) {
-            const seatsToRestore = booking.seats?.length || 1;
-            event.available_seats += seatsToRestore;
-            await this.eventsRepo.save(event);
+        // Restore seats to event only if booking was approved (seats were already decremented)
+        if (booking.status === 'approved') {
+            const event = await this.eventsRepo.findOne({ where: { id: booking.event.id } });
+            if (event) {
+                const seatsToRestore = booking.seats?.length || 1;
+                event.available_seats += seatsToRestore;
+                await this.eventsRepo.save(event);
+            }
         }
+        // For pending bookings, seats were never decremented, so no need to restore
 
         // Delete the booking
         await this.repo.remove(booking);

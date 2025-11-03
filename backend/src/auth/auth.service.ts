@@ -23,13 +23,18 @@ export class AuthService {
     }
 
     async login(email: string, password: string): Promise<any> {
+        console.log('🔍 Login attempt for:', email);
         const user = await this.usersService.findByEmail(email);
         if (!user) {
+            console.log('❌ User not found:', email);
             throw new Error('Invalid credentials');
         }
 
+        console.log('✅ User found:', user.email, 'Role:', user.role);
         const match = await bcrypt.compare(password, user.password);
+        console.log('🔐 Password match:', match);
         if (!match) {
+            console.log('❌ Password mismatch for:', email);
             throw new Error('Invalid credentials');
         }
 

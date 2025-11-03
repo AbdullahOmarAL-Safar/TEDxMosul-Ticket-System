@@ -17,8 +17,11 @@ export class Booking {
     @Column({ type: 'jsonb', default: '[]' })
     seats: { row: string; number: number }[];
 
-    @Column({ default: 'confirmed' })
-    status: string; // confirmed | checked_in | cancelled
+    @Column({ default: 'pending' })
+    status: string; // pending | approved | rejected | checked_in | cancelled
+
+    @Column({ nullable: true })
+    ticket_code: string; // Generated after admin approval (TEDX-xxxxxx)
 
     @Column({ type: 'timestamp', nullable: true })
     checked_in_at: Date;

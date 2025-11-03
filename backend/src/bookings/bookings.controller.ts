@@ -34,12 +34,40 @@ export class BookingsController {
         return this.bookingsService.findAll();
     }
 
-    // Check-in (admin/staff)
+    // Check-in (admin/staff) - supports both booking ID and ticket code
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin, Role.Staff)
     @Post(':id/checkin')
     checkIn(@Param('id') id: string) {
+        // Check if it's a ticket code (TEDX-XXXXXX) or booking ID (number)
+        if (id.startsWith('TEDX-')) {
+            return this.bookingsService.checkInByTicketCode(id);
+        }
         return this.bookingsService.checkIn(+id);
+    }
+
+    // Verify ticket code (admin/staff)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin, Role.Staff)
+    @Get('verify/:code')
+    verify(@Param('code') code: string) {
+        return this.bookingsService.verifyByTicketCode(code);
+    }
+
+    // Approve booking (admin only)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
+    @Post(':id/approve')
+    approve(@Param('id') id: string) {
+        return this.bookingsService.approve(+id);
+    }
+
+    // Reject booking (admin only)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
+    @Post(':id/reject')
+    reject(@Param('id') id: string) {
+        return this.bookingsService.reject(+id);
     }
 
     // Update booking (user can update their own booking)

@@ -41,11 +41,15 @@ export default function CheckIn() {
 
             scanner.render(
                 (decodedText) => {
-                    // Extract booking ID from QR code
-                    const match = decodedText.match(/booking[:\s]*(\d+)/i);
-                    if (match) {
-                        setBookingId(match[1]);
-                        handleCheckIn(match[1]);
+                    // Extract booking ID or ticket code from QR code
+                    // Supports formats: "TEDX-ABC123" or "Booking: 123"
+                    const ticketMatch = decodedText.match(/TEDX-([A-Z0-9]{6})/i);
+                    const bookingMatch = decodedText.match(/booking[:\s]*(\d+)/i);
+
+                    if (ticketMatch || bookingMatch) {
+                        const id = ticketMatch ? decodedText : (bookingMatch ? bookingMatch[1] : '');
+                        setBookingId(id);
+                        handleCheckIn(id);
                         scanner?.clear();
                         setScannerActive(false);
                     } else {

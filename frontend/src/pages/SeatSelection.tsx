@@ -204,7 +204,7 @@ const SeatSelection: React.FC = () => {
                 eventId: Number(id),
                 seats: selectedSeats,
             });
-            alert('Booking confirmed! 🎉');
+            alert('✅ Booking request submitted!\n\nYour booking is awaiting admin approval. You will receive your QR code once approved.');
             navigate('/my-tickets');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Booking failed');

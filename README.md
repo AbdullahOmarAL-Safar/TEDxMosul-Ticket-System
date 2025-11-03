@@ -19,7 +19,8 @@ It includes authentication, seat booking, QR tickets, and admin control — all 
 
 - 🎫 Realistic seat selection (auditorium layout)
 - 🔐 JWT authentication & role-based access
-- 🎟️ QR + PDF tickets
+- 🎟️ QR + PDF tickets (with admin approval system)
+- ⏳ **Admin approval workflow** for booking verification
 - 🧾 Full CRUD admin panel
 - 🌓 Dark/Light mode
 - 📱 Fully responsive UI
@@ -38,10 +39,10 @@ It includes authentication, seat booking, QR tickets, and admin control — all 
 
 | Module | Core Functions |
 |--------|----------------|
-| Booking | Interactive seat map, QR ticket, PDF download |
+| Booking | Interactive seat map, QR ticket, PDF download, **pending approval system** |
 | Auth | JWT login / register, hashed passwords, role control |
-| Admin | CRUD for events / speakers / users / bookings, stats dashboard |
-| Check-In | Camera QR scanner + manual ID validation |
+| Admin | CRUD for events / speakers / users / bookings, **approve/reject bookings**, stats dashboard |
+| Check-In | Camera QR scanner + manual ID validation, **ticket code verification** |
 | Speakers | Profiles with bios & social links |
 | Theme | Dark / Light mode with smooth transition |
 
@@ -126,8 +127,14 @@ Affiliation · TEDx Mosul / QAF Lab Bootcamp
 
 ## 📈 Status
 
-**Version 1.0** · ✅ Production Ready  
+**Version 1.1** · ✅ Production Ready  
+**Latest:** Admin Approval System (v1.1.0)  
 **Next steps** → Payments · Email alerts · Multilingual support
+
+### 📚 Documentation
+- `ADMIN_APPROVAL_SYSTEM.md` - Complete approval system guide
+- `TESTING_GUIDE.md` - Step-by-step testing instructions
+- `IMPLEMENTATION_SUMMARY.md` - Quick implementation overview
 
 ---
 

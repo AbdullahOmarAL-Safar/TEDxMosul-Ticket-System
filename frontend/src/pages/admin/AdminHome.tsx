@@ -5,14 +5,21 @@ import api from '../../api/axios';
 interface Stats {
     totalEvents: number;
     totalBookings: number;
+    pendingBookings: number;
     totalUsers: number;
     totalSpeakers: number;
+}
+
+interface Booking {
+    id: number;
+    status: string;
 }
 
 export default function AdminHome() {
     const [stats, setStats] = useState<Stats>({
         totalEvents: 0,
         totalBookings: 0,
+        pendingBookings: 0,
         totalUsers: 0,
         totalSpeakers: 0,
     });
@@ -31,9 +38,13 @@ export default function AdminHome() {
                 api.get('/speakers'),
             ]);
 
+            const bookingsList = bookings.data as Booking[];
+            const pendingCount = bookingsList.filter((b: Booking) => b.status === 'pending').length;
+
             setStats({
                 totalEvents: events.data.length,
                 totalBookings: bookings.data.length,
+                pendingBookings: pendingCount,
                 totalUsers: users.data.length,
                 totalSpeakers: speakers.data.length,
             });
@@ -65,6 +76,27 @@ export default function AdminHome() {
                     <div className="admin-stat-icon">📋</div>
                     <h2 className="admin-stat-value">{stats.totalBookings}</h2>
                     <p className="admin-stat-label">Total Bookings</p>
+                </div>
+
+                <div className="admin-stat-card" style={{ borderLeft: '4px solid #ffc107' }}>
+                    <div className="admin-stat-icon">⏳</div>
+                    <h2 className="admin-stat-value">{stats.pendingBookings}</h2>
+                    <p className="admin-stat-label">Pending Approval</p>
+                    {stats.pendingBookings > 0 && (
+                        <Link
+                            to="/admin/bookings"
+                            style={{
+                                fontSize: '12px',
+                                color: '#ffc107',
+                                fontWeight: '600',
+                                marginTop: '8px',
+                                display: 'inline-block',
+                                textDecoration: 'underline'
+                            }}
+                        >
+                            Review Now →
+                        </Link>
+                    )}
                 </div>
 
                 <div className="admin-stat-card" style={{ borderLeft: '4px solid #28a745' }}>

@@ -47,13 +47,41 @@ export default function AdminBookings() {
         }
     };
 
+    const handleApprove = async (bookingId: number) => {
+        if (!window.confirm('Approve this booking? A QR code will be generated.')) {
+            return;
+        }
+        try {
+            await api.post(`/bookings/${bookingId}/approve`);
+            showMessage('success', 'Booking approved! QR code generated.');
+            loadBookings();
+        } catch (error: any) {
+            showMessage('error', error?.response?.data?.message || 'Failed to approve booking');
+        }
+    };
+
+    const handleReject = async (bookingId: number) => {
+        if (!window.confirm('Reject this booking? Seats will be restored.')) {
+            return;
+        }
+        try {
+            await api.post(`/bookings/${bookingId}/reject`);
+            showMessage('success', 'Booking rejected. Seats restored.');
+            loadBookings();
+        } catch (error: any) {
+            showMessage('error', error?.response?.data?.message || 'Failed to reject booking');
+        }
+    };
+
     const filteredBookings = filterStatus === 'all'
         ? bookings
         : bookings.filter(b => b.status === filterStatus);
 
     const getStatusBadge = (status: string) => {
         const statusMap: Record<string, { className: string; label: string }> = {
-            'confirmed': { className: 'badge badge-success', label: 'Confirmed' },
+            'pending': { className: 'badge badge-warning', label: 'Pending' },
+            'approved': { className: 'badge badge-success', label: 'Approved' },
+            'rejected': { className: 'badge badge-danger', label: 'Rejected' },
             'cancelled': { className: 'badge badge-danger', label: 'Cancelled' },
             'checked_in': { className: 'badge badge-primary', label: 'Checked In' },
         };
@@ -88,7 +116,9 @@ export default function AdminBookings() {
                             onChange={(e) => setFilterStatus(e.target.value)}
                         >
                             <option value="all">All Status</option>
-                            <option value="confirmed">Confirmed</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
                             <option value="checked_in">Checked In</option>
                             <option value="cancelled">Cancelled</option>
                         </select>
@@ -148,7 +178,24 @@ export default function AdminBookings() {
                                             })}
                                         </td>
                                         <td>
-                                            {booking.status === 'confirmed' && (
+                                            {booking.status === 'pending' && (
+                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                    <button
+                                                        className="admin-action-btn admin-action-btn-edit"
+                                                        onClick={() => handleApprove(booking.id)}
+                                                        style={{ background: '#28a745', color: 'white' }}
+                                                    >
+                                                        ✓ Approve
+                                                    </button>
+                                                    <button
+                                                        className="admin-action-btn admin-action-btn-delete"
+                                                        onClick={() => handleReject(booking.id)}
+                                                    >
+                                                        ✗ Reject
+                                                    </button>
+                                                </div>
+                                            )}
+                                            {booking.status === 'approved' && (
                                                 <button
                                                     className="admin-action-btn admin-action-btn-edit"
                                                     onClick={() => handleCheckIn(booking.id)}
@@ -159,6 +206,11 @@ export default function AdminBookings() {
                                             {booking.status === 'checked_in' && (
                                                 <span style={{ color: '#28a745', fontSize: '13px', fontWeight: '600' }}>
                                                     ✓ Checked In
+                                                </span>
+                                            )}
+                                            {(booking.status === 'rejected' || booking.status === 'cancelled') && (
+                                                <span style={{ color: '#dc3545', fontSize: '13px', fontWeight: '600' }}>
+                                                    {booking.status === 'rejected' ? '✗ Rejected' : '✗ Cancelled'}
                                                 </span>
                                             )}
                                         </td>
@@ -177,9 +229,15 @@ export default function AdminBookings() {
                     <div className="admin-stat-value" style={{ fontSize: '28px' }}>{bookings.length}</div>
                 </div>
                 <div className="admin-stat-card">
-                    <div className="admin-stat-label">Confirmed</div>
+                    <div className="admin-stat-label">Pending Approval</div>
+                    <div className="admin-stat-value" style={{ fontSize: '28px', color: '#ffc107' }}>
+                        {bookings.filter(b => b.status === 'pending').length}
+                    </div>
+                </div>
+                <div className="admin-stat-card">
+                    <div className="admin-stat-label">Approved</div>
                     <div className="admin-stat-value" style={{ fontSize: '28px', color: '#28a745' }}>
-                        {bookings.filter(b => b.status === 'confirmed').length}
+                        {bookings.filter(b => b.status === 'approved').length}
                     </div>
                 </div>
                 <div className="admin-stat-card">

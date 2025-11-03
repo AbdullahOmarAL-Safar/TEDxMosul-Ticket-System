@@ -67,7 +67,9 @@ export default function MyTickets() {
 
     const getStatusBadge = (status: string) => {
         const statusMap: Record<string, string> = {
-            'confirmed': 'badge badge-success',
+            'pending': 'badge badge-warning',
+            'approved': 'badge badge-success',
+            'rejected': 'badge badge-danger',
             'cancelled': 'badge badge-danger',
             'checked_in': 'badge badge-primary'
         };
@@ -156,91 +158,145 @@ export default function MyTickets() {
                                     )}
                                 </div>
 
-                                {/* QR Code for Check-in */}
-                                <div style={{
-                                    marginTop: '1.5rem',
-                                    padding: '1.5rem',
-                                    background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
-                                    borderRadius: '12px',
-                                    textAlign: 'center'
-                                }}>
-                                    <h4 style={{
-                                        fontSize: '0.9rem',
-                                        fontWeight: '600',
-                                        color: 'var(--gray-700)',
-                                        marginBottom: '1rem'
-                                    }}>
-                                        Scan QR Code at Event
-                                    </h4>
+                                {/* QR Code Section - Only for Approved Bookings */}
+                                {b.status === 'pending' && (
                                     <div style={{
-                                        display: 'inline-block',
-                                        padding: '1rem',
-                                        background: 'white',
+                                        marginTop: '1.5rem',
+                                        padding: '2rem',
+                                        background: 'linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%)',
                                         borderRadius: '12px',
-                                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                                        textAlign: 'center',
+                                        border: '2px dashed #ffc107'
                                     }}>
-                                        <QRCodeSVG
-                                            value={`Booking: ${b.id}`}
-                                            size={150}
-                                            level="H"
-                                            includeMargin={true}
-                                        />
+                                        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⏳</div>
+                                        <h4 style={{
+                                            fontSize: '1.1rem',
+                                            fontWeight: '600',
+                                            color: '#856404',
+                                            marginBottom: '0.5rem'
+                                        }}>
+                                            Pending Admin Approval
+                                        </h4>
+                                        <p style={{
+                                            fontSize: '0.9rem',
+                                            color: '#856404',
+                                            margin: 0
+                                        }}>
+                                            Your booking request is awaiting admin approval.<br />
+                                            You'll receive your QR code once approved.
+                                        </p>
                                     </div>
-                                    <p style={{
-                                        fontSize: '0.85rem',
-                                        color: 'var(--gray-600)',
-                                        marginTop: '1rem',
-                                        fontWeight: '500'
+                                )}
+
+                                {b.status === 'rejected' && (
+                                    <div style={{
+                                        marginTop: '1.5rem',
+                                        padding: '2rem',
+                                        background: 'linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%)',
+                                        borderRadius: '12px',
+                                        textAlign: 'center',
+                                        border: '2px solid #dc3545'
                                     }}>
-                                        Booking ID: #{b.id}
-                                    </p>
+                                        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>❌</div>
+                                        <h4 style={{
+                                            fontSize: '1.1rem',
+                                            fontWeight: '600',
+                                            color: '#721c24',
+                                            marginBottom: '0.5rem'
+                                        }}>
+                                            Booking Request Not Approved
+                                        </h4>
+                                        <p style={{
+                                            fontSize: '0.9rem',
+                                            color: '#721c24',
+                                            margin: 0
+                                        }}>
+                                            Unfortunately, your booking request was not approved by the admin.
+                                        </p>
+                                    </div>
+                                )}
 
-                                    {/* PDF Download Button */}
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={() => handleDownloadPDF(b)}
-                                        disabled={downloadingPDF === b.id}
-                                        style={{
+                                {(b.status === 'approved' || b.status === 'checked_in') && (
+                                    <div style={{
+                                        marginTop: '1.5rem',
+                                        padding: '1.5rem',
+                                        background: 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)',
+                                        borderRadius: '12px',
+                                        textAlign: 'center',
+                                        border: '2px solid #28a745'
+                                    }}>
+                                        <h4 style={{
+                                            fontSize: '0.9rem',
+                                            fontWeight: '600',
+                                            color: '#155724',
+                                            marginBottom: '1rem'
+                                        }}>
+                                            ✓ Approved - Scan QR Code at Event
+                                        </h4>
+                                        <div style={{
+                                            display: 'inline-block',
+                                            padding: '1rem',
+                                            background: 'white',
+                                            borderRadius: '12px',
+                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                                        }}>
+                                            <QRCodeSVG
+                                                value={b.ticket_code || `TEDX-${b.id}`}
+                                                size={150}
+                                                level="H"
+                                                includeMargin={true}
+                                            />
+                                        </div>
+                                        <p style={{
+                                            fontSize: '0.85rem',
+                                            color: '#155724',
                                             marginTop: '1rem',
-                                            width: '100%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '0.5rem',
-                                            background: downloadingPDF === b.id ? 'var(--gray-400)' : 'var(--ted-red)',
-                                            cursor: downloadingPDF === b.id ? 'not-allowed' : 'pointer'
-                                        }}
-                                    >
-                                        {downloadingPDF === b.id ? (
-                                            <>
-                                                <span className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></span>
-                                                Generating PDF...
-                                            </>
-                                        ) : (
-                                            <>
-                                                📥 Download Ticket as PDF
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
+                                            fontWeight: '600'
+                                        }}>
+                                            Ticket Code: {b.ticket_code || `TEDX-${b.id}`}
+                                        </p>
 
-                                {b.status !== 'checked_in' && (
+                                        {/* PDF Download Button */}
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={() => handleDownloadPDF(b)}
+                                            disabled={downloadingPDF === b.id}
+                                            style={{
+                                                marginTop: '1rem',
+                                                width: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '0.5rem',
+                                                background: downloadingPDF === b.id ? 'var(--gray-400)' : '#28a745',
+                                                cursor: downloadingPDF === b.id ? 'not-allowed' : 'pointer'
+                                            }}
+                                        >
+                                            {downloadingPDF === b.id ? (
+                                                <>
+                                                    <span className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></span>
+                                                    Generating PDF...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    📥 Download Ticket as PDF
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {b.status !== 'checked_in' && b.status !== 'rejected' && (
                                     <div className="ticket-actions" style={{ marginTop: '1.5rem' }}>
-                                        {b.status === 'confirmed' && (
+                                        {(b.status === 'pending' || b.status === 'approved') && (
                                             <button
-                                                className="btn btn-sm btn-secondary"
-                                                onClick={() => handleUpdateStatus(b.id, 'cancelled')}
+                                                className="btn btn-sm btn-outline"
+                                                onClick={() => handleCancel(b.id)}
+                                                style={{ borderColor: 'var(--ted-red)', color: 'var(--ted-red)' }}
                                             >
-                                                Mark as Cancelled
+                                                Cancel Booking
                                             </button>
                                         )}
-                                        <button
-                                            className="btn btn-sm btn-outline"
-                                            onClick={() => handleCancel(b.id)}
-                                            style={{ borderColor: 'var(--ted-red)', color: 'var(--ted-red)' }}
-                                        >
-                                            Delete Booking
-                                        </button>
                                     </div>
                                 )}
                             </div>

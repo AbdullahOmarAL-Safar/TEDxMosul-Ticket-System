@@ -10,7 +10,6 @@ import { Role } from '../auth/role.enum';
 export class EventsController {
     constructor(private eventsService: EventsService) { }
 
-    // عام للجميع
     @Get()
     findAll(@Query('search') search?: string) {
         return this.eventsService.findAll(search);
