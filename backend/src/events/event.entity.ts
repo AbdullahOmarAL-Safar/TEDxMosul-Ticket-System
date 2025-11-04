@@ -31,9 +31,9 @@ export class Event {
     @CreateDateColumn()
     created_at: Date;
 
-    @OneToMany(() => Booking, (booking) => booking.event)
+    @OneToMany(() => Booking, (booking) => booking.event, { cascade: true })
     bookings: Booking[];
 
-    @OneToMany(() => Speaker, (speaker) => speaker.event)
+    @OneToMany(() => Speaker, (speaker) => speaker.event, { cascade: true })
     speakers: Speaker[];
 }

@@ -11,7 +11,7 @@ export class Booking {
     @ManyToOne(() => User, (user) => user.bookings, { eager: false })
     user: User;
 
-    @ManyToOne(() => Event, (event) => event.bookings, { eager: false })
+    @ManyToOne(() => Event, (event) => event.bookings, { eager: false, onDelete: 'CASCADE' })
     event: Event;
 
     @Column({ type: 'jsonb', default: '[]' })

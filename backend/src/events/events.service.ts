@@ -38,9 +38,13 @@ export class EventsService {
     }
 
     async remove(id: number) {
-        const e = await this.findOne(id);
+        const e = await this.repo.findOne({
+            where: { id },
+            relations: ['bookings', 'speakers'],
+        });
+        if (!e) throw new NotFoundException('Event not found');
         await this.repo.remove(e);
-        return { message: 'Event deleted' };
+        return { message: 'Event deleted successfully' };
     }
 
     async decrementSeat(eventId: number) {
