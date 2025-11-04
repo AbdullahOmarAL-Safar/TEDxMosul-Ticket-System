@@ -8,7 +8,7 @@ export class Booking {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => User, (user) => user.bookings, { eager: false })
+    @ManyToOne(() => User, (user) => user.bookings, { eager: false, onDelete: 'CASCADE' })
     user: User;
 
     @ManyToOne(() => Event, (event) => event.bookings, { eager: false, onDelete: 'CASCADE' })

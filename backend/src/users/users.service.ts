@@ -34,4 +34,38 @@ export class UsersService {
         user.role = role;
         return this.repo.save(user);
     }
+
+    async deleteUser(userId: number): Promise<{ message: string; approvedBookingsCount: number }> {
+        const user = await this.repo.findOne({
+            where: { id: userId },
+            relations: ['bookings'],
+        });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        // Count approved bookings for confirmation
+        const approvedBookingsCount = user.bookings?.filter(b => b.status === 'approved').length || 0;
+
+        // Delete user (cascade will delete all bookings)
+        await this.repo.remove(user);
+
+        return {
+            message: 'User deleted successfully',
+            approvedBookingsCount,
+        };
+    }
+
+    async getUserBookingsInfo(userId: number): Promise<{ approvedBookingsCount: number }> {
+        const user = await this.repo.findOne({
+            where: { id: userId },
+            relations: ['bookings'],
+        });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        const approvedBookingsCount = user.bookings?.filter(b => b.status === 'approved').length || 0;
+        return { approvedBookingsCount };
+    }
 }

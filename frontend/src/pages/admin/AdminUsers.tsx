@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 
 interface User {
@@ -10,6 +11,7 @@ interface User {
 }
 
 export default function AdminUsers() {
+    const navigate = useNavigate();
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -48,6 +50,29 @@ export default function AdminUsers() {
         }
     };
 
+    const handleDeleteUser = async (userId: number, userName: string) => {
+        try {
+            // Check if user has approved bookings
+            const infoResponse = await api.get(`/users/${userId}/bookings-info`);
+            const { approvedBookingsCount } = infoResponse.data;
+
+            let confirmMessage = `Are you sure you want to delete user "${userName}"?`;
+            if (approvedBookingsCount > 0) {
+                confirmMessage = `⚠️ This user has ${approvedBookingsCount} approved booking(s).\n\nDeleting this user will also remove all their bookings.\n\nAre you sure you want to continue?`;
+            }
+
+            if (!window.confirm(confirmMessage)) {
+                return;
+            }
+
+            await api.delete(`/users/${userId}`);
+            showMessage('success', `User "${userName}" deleted successfully!`);
+            loadUsers();
+        } catch (error: any) {
+            showMessage('error', error?.response?.data?.message || 'Failed to delete user');
+        }
+    };
+
     const getRoleBadge = (role: string) => {
         const roleMap: Record<string, { className: string; icon: string }> = {
             'admin': { className: 'badge badge-danger', icon: '👑' },
@@ -67,6 +92,15 @@ export default function AdminUsers() {
 
     return (
         <div>
+            {/* Back Button */}
+            <button
+                onClick={() => navigate('/admin')}
+                className="btn btn-outline"
+                style={{ marginBottom: '20px' }}
+            >
+                ← Back to Dashboard
+            </button>
+
             {message && (
                 <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-error'} fade-in`} style={{ marginBottom: '24px' }}>
                     {message.type === 'success' ? '✅' : '❌'} {message.text}
@@ -87,12 +121,13 @@ export default function AdminUsers() {
                             <th>Current Role</th>
                             <th>Registered</th>
                             <th>Change Role</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {users.length === 0 ? (
                             <tr>
-                                <td colSpan={6} style={{ textAlign: 'center', padding: '40px' }}>
+                                <td colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>
                                     No users found
                                 </td>
                             </tr>
@@ -144,6 +179,16 @@ export default function AdminUsers() {
                                                 </button>
                                             )}
                                         </div>
+                                    </td>
+                                    <td>
+                                        <button
+                                            className="admin-action-btn"
+                                            style={{ background: '#e62b1e', color: 'white' }}
+                                            onClick={() => handleDeleteUser(user.id, user.name)}
+                                            title="Delete user"
+                                        >
+                                            🗑️ Delete
+                                        </button>
                                     </td>
                                 </tr>
                             ))

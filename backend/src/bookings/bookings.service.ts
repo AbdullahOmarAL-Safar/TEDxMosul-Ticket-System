@@ -15,7 +15,13 @@ export class BookingsService {
     ) { }
 
     async create(userId: number, dto: CreateBookingDto) {
-        // تحقق من عدم وجود حجز مسبق لنفس الحدث
+        // Check if user exists
+        const userExists = await this.repo.manager.findOne('User', { where: { id: userId } });
+        if (!userExists) {
+            throw new BadRequestException('User account not found. Please login again.');
+        }
+
+        // Check for existing booking
         const exists = await this.repo.findOne({
             where: { user: { id: userId }, event: { id: dto.eventId } },
             relations: ['user', 'event'],
@@ -78,9 +84,20 @@ export class BookingsService {
         });
     }
 
-    // للإدمن إن احتاج
     findAll() {
         return this.repo.find({ relations: ['user', 'event'] });
+    }
+
+    async searchBookings(search: string) {
+        const queryBuilder = this.repo.createQueryBuilder('booking')
+            .leftJoinAndSelect('booking.user', 'user')
+            .leftJoinAndSelect('booking.event', 'event')
+            .where('user.name ILIKE :search', { search: `%${search}%` })
+            .orWhere('user.email ILIKE :search', { search: `%${search}%` })
+            .orWhere('booking.ticket_code ILIKE :search', { search: `%${search}%` })
+            .orderBy('booking.created_at', 'DESC');
+
+        return queryBuilder.getMany();
     }
 
     async checkIn(bookingId: number) {

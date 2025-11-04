@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Patch, Delete, UseGuards, Req, Param } from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Delete, UseGuards, Req, Param, Query } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateBookingDto } from './dto/create-booking.dto';
@@ -24,11 +24,14 @@ export class BookingsController {
         return this.bookingsService.findMy(req.user.userId);
     }
 
-    // All bookings (admin only)
+    // All bookings with optional search (admin only)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)
     @Get()
-    findAll() {
+    findAll(@Query('search') search?: string) {
+        if (search) {
+            return this.bookingsService.searchBookings(search);
+        }
         return this.bookingsService.findAll();
     }
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 
 interface Booking {
@@ -12,10 +13,13 @@ interface Booking {
 }
 
 export default function AdminBookings() {
+    const navigate = useNavigate();
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
     const [filterStatus, setFilterStatus] = useState<string>('all');
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [searching, setSearching] = useState(false);
 
     useEffect(() => {
         loadBookings();
@@ -29,6 +33,25 @@ export default function AdminBookings() {
             showMessage('error', 'Failed to load bookings');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleSearch = async (query: string) => {
+        setSearchQuery(query);
+
+        if (!query.trim()) {
+            loadBookings();
+            return;
+        }
+
+        setSearching(true);
+        try {
+            const response = await api.get(`/bookings?search=${encodeURIComponent(query)}`);
+            setBookings(response.data);
+        } catch (error) {
+            showMessage('error', 'Search failed');
+        } finally {
+            setSearching(false);
         }
     };
 
@@ -98,6 +121,15 @@ export default function AdminBookings() {
 
     return (
         <div>
+            {/* Back Button */}
+            <button
+                onClick={() => navigate('/admin')}
+                className="btn btn-outline"
+                style={{ marginBottom: '20px' }}
+            >
+                ← Back to Dashboard
+            </button>
+
             {message && (
                 <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-error'} fade-in`} style={{ marginBottom: '24px' }}>
                     {message.type === 'success' ? '✅' : '❌'} {message.text}
@@ -123,6 +155,52 @@ export default function AdminBookings() {
                             <option value="cancelled">Cancelled</option>
                         </select>
                     </div>
+                </div>
+
+                {/* Search Bar */}
+                <div style={{
+                    padding: '20px',
+                    borderBottom: '1px solid var(--border)',
+                    background: 'var(--bg-secondary)'
+                }}>
+                    <div style={{ position: 'relative', maxWidth: '500px' }}>
+                        <input
+                            type="text"
+                            className="form-input"
+                            placeholder="🔍 Search by name, email, or ticket code..."
+                            value={searchQuery}
+                            onChange={(e) => handleSearch(e.target.value)}
+                            style={{
+                                paddingLeft: '16px',
+                                paddingRight: searchQuery ? '40px' : '16px',
+                            }}
+                        />
+                        {searchQuery && (
+                            <button
+                                onClick={() => handleSearch('')}
+                                style={{
+                                    position: 'absolute',
+                                    right: '12px',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontSize: '18px',
+                                    color: 'var(--gray-600)',
+                                    padding: '4px',
+                                }}
+                                title="Clear search"
+                            >
+                                ✕
+                            </button>
+                        )}
+                    </div>
+                    {searching && (
+                        <div style={{ marginTop: '8px', fontSize: '13px', color: 'var(--gray-600)' }}>
+                            Searching...
+                        </div>
+                    )}
                 </div>
 
                 <div style={{ overflowX: 'auto' }}>

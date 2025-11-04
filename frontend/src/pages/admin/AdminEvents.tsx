@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 
 interface Event {
@@ -13,6 +14,7 @@ interface Event {
 }
 
 export default function AdminEvents() {
+    const navigate = useNavigate();
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -138,6 +140,15 @@ export default function AdminEvents() {
 
     return (
         <div>
+            {/* Back Button */}
+            <button
+                onClick={() => navigate('/admin')}
+                className="btn btn-outline"
+                style={{ marginBottom: '20px' }}
+            >
+                ← Back to Dashboard
+            </button>
+
             {message && (
                 <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-error'} fade-in`} style={{ marginBottom: '24px' }}>
                     {message.type === 'success' ? '✅' : '❌'} {message.text}
