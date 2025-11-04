@@ -11,15 +11,13 @@ import { Role } from '../auth/role.enum';
 export class BookingsController {
     constructor(private bookingsService: BookingsService) { }
 
-    // حجز جديد (مستخدم مسجل فقط)
     @UseGuards(JwtAuthGuard)
     @Post()
     create(@Body() dto: CreateBookingDto, @Req() req: any) {
-        const userId = req.user.userId; // من JwtStrategy.validate
+        const userId = req.user.userId;
         return this.bookingsService.create(userId, dto);
     }
 
-    // حجوزاتي
     @UseGuards(JwtAuthGuard)
     @Get('me')
     findMine(@Req() req: any) {

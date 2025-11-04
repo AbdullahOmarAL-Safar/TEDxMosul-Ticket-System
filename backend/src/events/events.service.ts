@@ -31,7 +31,6 @@ export class EventsService {
     async update(id: number, data: Partial<Event>) {
         const e = await this.findOne(id);
         Object.assign(e, data);
-        // إعادة ضبط المتاح إذا تغيّرت السعة
         if (data.capacity !== undefined && data.capacity < e.bookings?.length!) {
             throw new BadRequestException('Capacity cannot be less than current bookings');
         }
@@ -44,7 +43,6 @@ export class EventsService {
         return { message: 'Event deleted' };
     }
 
-    // مساعد لخفض المقاعد
     async decrementSeat(eventId: number) {
         const e = await this.findOne(eventId);
         if (e.available_seats <= 0) throw new BadRequestException('Event is full');
