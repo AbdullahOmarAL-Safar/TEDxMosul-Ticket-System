@@ -138,6 +138,37 @@ const SeatSelection: React.FC = () => {
         return generateTheaterLayout(event.capacity);
     }, [event?.capacity]);
 
+    // Calculate dynamic seat size based on capacity
+    const seatConfig = useMemo(() => {
+        const capacity = event?.capacity || 150;
+
+        if (capacity <= 200) {
+            return {
+                seatSize: 36,
+                fontSize: 11,
+                gap: 8,
+                aisleWidth: 40,
+                venueType: 'small'
+            };
+        } else if (capacity <= 600) {
+            return {
+                seatSize: 28,
+                fontSize: 9,
+                gap: 6,
+                aisleWidth: 35,
+                venueType: 'medium'
+            };
+        } else {
+            return {
+                seatSize: 22,
+                fontSize: 8,
+                gap: 5,
+                aisleWidth: 30,
+                venueType: 'large'
+            };
+        }
+    }, [event?.capacity]);
+
     useEffect(() => {
         if (!token) {
             navigate('/login');
@@ -248,14 +279,18 @@ const SeatSelection: React.FC = () => {
             </div>
 
             {/* Seat Map - Realistic Theater Layout */}
-            <div className="seat-map theater-layout">
+            <div className={`seat-map theater-layout venue-${seatConfig.venueType}`}>
                 {theaterLayout.map((rowConfig, rowIndex) => {
                     const totalSeatsInRow = rowConfig.leftSeats + rowConfig.rightSeats;
 
                     return (
                         <div key={rowConfig.label} className="theater-row" style={{
                             '--row-width': totalSeatsInRow,
-                            '--row-gap': rowConfig.hasAisle ? '40px' : '0px'
+                            '--row-gap': rowConfig.hasAisle ? `${seatConfig.aisleWidth}px` : '0px',
+                            '--seat-size': `${seatConfig.seatSize}px`,
+                            '--seat-font-size': `${seatConfig.fontSize}px`,
+                            '--seat-gap': `${seatConfig.gap}px`,
+                            '--row-index': rowIndex
                         } as React.CSSProperties}>
                             {/* Row Label (Left) */}
                             <div className="row-label">{rowConfig.label}</div>
