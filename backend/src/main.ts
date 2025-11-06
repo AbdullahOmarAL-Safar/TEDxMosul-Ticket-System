@@ -7,7 +7,7 @@ async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
 
-    // CORS: Allow frontend on port 3000 and 3001 to access backend on port 4000
+    // CORS: Allow frontend on port 3000 (and 3001) to access backend on port 4000
     app.enableCors({
       origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'],
       credentials: true,

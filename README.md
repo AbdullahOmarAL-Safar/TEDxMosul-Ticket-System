@@ -1,146 +1,215 @@
-# 🎭 TEDxMosul Tickets System
+<div align="center">
 
-Full-stack event management and ticketing platform for TEDx Mosul — featuring seat selection, QR tickets, and a professional admin dashboard.
+# 🎟️ TEDxMosul Ticket System
 
----
+Production‑ready event ticket booking and management platform for TEDx Mosul.
 
-## 🚀 Live Demo
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Made with TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript&logoColor=white)
+![NestJS](https://img.shields.io/badge/NestJS-11.x-e0234e?logo=nestjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19.x-61dafb?logo=react&logoColor=000)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?logo=postgresql&logoColor=white)
 
-🔗 Coming soon
+<sub>Docs for both apps: <a href="backend/README.md">backend/README.md</a> • <a href="frontend/README.md">frontend/README.md</a></sub>
 
----
-
-## 🧠 Overview
-
-TEDxMosul Tickets System streamlines event management from creation to check-in.
-It includes authentication, seat booking, QR tickets, and admin control — all in one responsive web app.
-
-### Highlights
-
-- 🎫 Realistic seat selection (auditorium layout)
-- 🔐 JWT authentication & role-based access
-- 🎟️ QR + PDF tickets (with admin approval system)
-- ⏳ **Admin approval workflow** for booking verification
-- 🧾 Full CRUD admin panel
-- 🌓 Dark/Light mode
-- 📱 Fully responsive UI
+</div>
 
 ---
 
-## 🏗️ Tech Stack
+## 🎯 Overview / Purpose
 
-**Frontend:** React 18 + TypeScript • Axios • React Router • jsPDF • html5-qrcode  
-**Backend:** NestJS 10 • TypeORM • PostgreSQL • JWT • bcrypt • uuid  
-**Tools:** Git • npm • ESLint • Nodemon
+TEDxMosul Ticket System powers the full lifecycle of TEDx events: from publishing events and speakers, to secure ticket booking, approval workflow, QR code check‑in, and admin management. It’s designed for clarity, speed, and maintainability using a clean NestJS/React stack.
 
----
-
-## ⚙️ Key Features
-
-| Module | Core Functions |
-|--------|----------------|
-| Booking | Interactive seat map, QR ticket, PDF download, **pending approval system** |
-| Auth | JWT login / register, hashed passwords, role control |
-| Admin | CRUD for events / speakers / users / bookings, **approve/reject bookings**, stats dashboard |
-| Check-In | Camera QR scanner + manual ID validation, **ticket code verification** |
-| Speakers | Profiles with bios & social links |
-| Theme | Dark / Light mode with smooth transition |
+Key highlights:
+- 🔐 JWT auth with role‑based access control (Admin, Staff, User)
+- 🎫 Seat selection and ticket booking with approval workflow
+- 🧾 QR/PDF tickets and on‑site scanning support
+- 🗂️ Admin dashboard for users, events, speakers, and bookings
+- 🌙 Dark mode and responsive UI
 
 ---
 
-## 💡 Architecture
+## 🧱 System Architecture
 
 ```
-frontend/
- ├── components/ | pages/ | context/
-backend/
- ├── auth/ | users/ | events/ | speakers/ | bookings/
-database/
- └── PostgreSQL (users, events, speakers, bookings)
+┌────────────────────┐        Axios (HTTP)         ┌──────────────────────┐         TypeORM         ┌────────────────────┐
+│  React Frontend    │  <──────────────────────>   │  NestJS API (4000)   │  <──────────────────>  │   PostgreSQL DB    │
+│  (Vite/CRA • 3000) │        CORS + JWT           │  Auth • Events • ... │       Entities/DTOs    │  users • events... │
+└────────────────────┘                             └──────────────────────┘                         └────────────────────┘
 ```
 
 ---
 
-## 🧰 Setup
+## ✅ Features Summary
+
+- Authentication & Authorization: JWT login/register, password hashing (bcrypt), RBAC guards
+- Event Management: CRUD for events, capacity, scheduling, speaker linking
+- Booking Workflow: Pending → Approve/Reject, capacity checks, user history
+- Speakers: Profiles, bios, social links, event mapping
+- Admin: Manage users/roles, bookings, events, speakers; metrics‑ready structure
+- UX: Dark mode, responsive layout, QR code scanning support
+
+---
+
+## 📁 Directory Structure
+
+```
+TEDxMosul Ticket System/
+├─ backend/                      # NestJS app (API + DB)
+│  ├─ src/
+│  │  ├─ auth/                  # JWT, guards, strategies
+│  │  ├─ users/                 # users CRUD, roles, DTOs
+│  │  ├─ events/                # events module
+│  │  ├─ bookings/              # booking module
+│  │  ├─ speakers/              # speakers module
+│  │  ├─ database/              # database module & seeding
+│  │  └─ main.ts                # bootstrap (CORS, pipes, port)
+│  ├─ .env                      # backend environment (PORT=4000, DB, JWT)
+│  └─ README.md
+│
+└─ frontend/                    # React app (UI)
+   ├─ src/
+   │  ├─ api/                   # axios instance + services
+   │  ├─ components/            # reusable UI components
+   │  ├─ pages/                 # routed screens
+   │  └─ App.tsx / index.tsx
+   ├─ .env                      # frontend environment (PORT=3000)
+   └─ README.md
+```
+
+---
+
+## 🛠️ Installation
+
+Prerequisites:
+- Node.js 18+ and npm
+- PostgreSQL 13+ running locally
+
+Clone the repository:
 
 ```bash
-# Clone
 git clone https://github.com/AbdullahOmarAL-Safar/TEDxMosul-Ticket-System.git
-cd TEDxMosul-Ticket-System
+cd "TEDxMosul Ticket System"
 ```
 
-### Backend
+Install dependencies for both apps:
+
 ```bash
+# Backend
 cd backend
 npm install
-# .env → configure PostgreSQL & JWT_SECRET
-npm run start:dev
-```
 
-### Frontend
-```bash
+# Frontend
 cd ../frontend
 npm install
-npm start
 ```
 
-**Frontend:** http://localhost:3000  
-**API:** http://localhost:3001
+---
+
+## ▶️ Run Both Servers
+
+Run individually in two terminals:
+
+```bash
+# Terminal A — Backend (NestJS)
+cd backend
+npm run start:dev   # http://localhost:4000
+
+# Terminal B — Frontend (React)
+cd frontend
+npm start           # http://localhost:3000
+```
+
+Notes:
+- The frontend talks to the backend via `REACT_APP_API_URL` (default http://localhost:4000)
+- CORS is enabled in `backend/src/main.ts` for http://localhost:3000
 
 ---
 
-## 🔐 Default Login
+## 🔧 Environment Variables
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@tedxmosul.com | admin123 |
+Create `.env` files as shown below.
 
----
+Backend (`backend/.env`):
 
-## 🛡️ Security
+```env
+PORT=4000
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=postgres
+DATABASE_PASSWORD=your_password
+DATABASE_NAME=tedxmosul_db
+JWT_SECRET=change_me
+```
 
-- ✅ JWT tokens + role guards
-- ✅ bcrypt hashed passwords
-- ✅ DTO validation (class-validator)
-- ✅ SQL injection & XSS protection
-- ✅ Seat locking to prevent over-booking
+Frontend (`frontend/.env`):
 
----
-
-## 📸 Screenshots (Preview)
-
-![Homepage](https://via.placeholder.com/800x400?text=TEDxMosul+Homepage)
-
-![Seat Selection](https://via.placeholder.com/800x400?text=Interactive+Seat+Map)
-
-![Admin Dashboard](https://via.placeholder.com/800x400?text=Admin+Dashboard)
+```env
+PORT=3000
+REACT_APP_API_URL=http://localhost:4000
+```
 
 ---
 
-## 🧑‍💻 Author
+## 🧩 Tech Stack
 
-**Abdullah Omar AL-Safar**  
-GitHub · [@AbdullahOmarAL-Safar](https://github.com/AbdullahOmarAL-Safar)  
-Affiliation · TEDx Mosul / QAF Lab Bootcamp
+| Area      | Technology |
+|-----------|------------|
+| Backend   | NestJS 11, TypeScript, TypeORM, class‑validator, bcrypt |
+| Frontend  | React + TypeScript, React Router, Axios, CSS Modules |
+| Database  | PostgreSQL |
+| Security  | JWT Auth, Role Guards, ValidationPipe, CORS |
 
 ---
 
-## 📈 Status
+## 🔄 Data Flow
 
-**Version 1.1** · ✅ Production Ready  
-**Latest:** Admin Approval System (v1.1.0)  
-**Next steps** → Payments · Email alerts · Multilingual support
+```text
+User → Frontend (React)
+	→ POST /auth/login → Backend (NestJS) → Validate (bcrypt/DB) → Issue JWT → Frontend stores token
+	→ GET /events → Backend → DB → Events list
+	→ POST /bookings (JWT) → Create booking (PENDING)
+Admin → PATCH /bookings/:id/approve → Seats decrement → QR issued
+On-site → QR scan → Verify ticket → Check‑in
+```
 
-### 📚 Documentation
-- `ADMIN_APPROVAL_SYSTEM.md` - Complete approval system guide
-- `TESTING_GUIDE.md` - Step-by-step testing instructions
-- `IMPLEMENTATION_SUMMARY.md` - Quick implementation overview
+---
+
+## 🖼️ Screenshots / Preview
+
+> Replace placeholders with real screenshots.
+
+![Homepage](https://github.com/AbdullahOmarAL-Safar/TEDxMosul-Ticket-System/blob/main/frontend/public/123.png)
+![Seat Selection](https://github.com/AbdullahOmarAL-Safar/TEDxMosul-Ticket-System/blob/main/frontend/public/314.png)
+![Admin Dashboard](https://github.com/AbdullahOmarAL-Safar/TEDxMosul-Ticket-System/blob/main/frontend/public/713.png)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! To propose a change:
+
+1. Fork the repo and create a feature branch
+2. Commit with clear messages (Conventional Commits preferred)
+3. Open a Pull Request describing the change and context
+4. Add screenshots for UI changes where possible
+
+Please review coding style in the respective app READMEs:
+- Backend: `backend/README.md`
+- Frontend: `frontend/README.md`
+
+---
+
+## 🙌 Credits / Acknowledgment
+
+- Built by: **Abdullah Omar AL‑Saffar** · GitHub: [@AbdullahOmarAL-Safar](https://github.com/AbdullahOmarAL-Safar)
+- For: **TEDx Mosul** — Ideas Worth Spreading
+- Thanks to contributors and the open‑source community
 
 ---
 
 <div align="center">
 
-**Built with ❤️ for TEDx Mosul**  
-*Ideas Worth Spreading*
+Made with ❤️ for the TEDx community.
 
 </div>
