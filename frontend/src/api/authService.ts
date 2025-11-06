@@ -1,36 +1,18 @@
-import api from '../api/axios';
-import { User } from '../types';
+import api from './axios';
 
-export interface LoginResponse {
+export type LoginResponse = {
     access_token: string;
-    user: User;
-}
-
-export interface RegisterRequest {
-    name: string;
-    email: string;
-    password: string;
-}
-
-export interface LoginRequest {
-    email: string;
-    password: string;
-}
-
-export const authService = {
-    /**
-     * Login user
-     */
-    login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-        const { data } = await api.post<LoginResponse>('/auth/login', credentials);
-        return data;
-    },
-
-    /**
-     * Register new user
-     */
-    register: async (userData: RegisterRequest): Promise<{ message: string }> => {
-        const { data } = await api.post<{ message: string }>('/auth/register', userData);
-        return data;
-    },
+    user: { id: number; name: string; email: string; role: string };
 };
+
+export async function login(email: string, password: string) {
+    const { data } = await api.post<LoginResponse>('/auth/login', { email, password });
+    return data;
+}
+
+export async function register(name: string, email: string, password: string) {
+    const { data } = await api.post('/auth/register', { name, email, password });
+    return data;
+}
+
+export { };
