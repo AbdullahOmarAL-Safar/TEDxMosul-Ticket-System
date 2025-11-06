@@ -182,7 +182,6 @@ On-site → QR scan → Verify ticket → Check‑in
 ![Homepage](https://github.com/AbdullahOmarAL-Safar/TEDxMosul-Ticket-System/blob/main/frontend/public/123.png)
 ![Seat Selection](https://github.com/AbdullahOmarAL-Safar/TEDxMosul-Ticket-System/blob/main/frontend/public/314.png)
 ![Admin Dashboard](https://github.com/AbdullahOmarAL-Safar/TEDxMosul-Ticket-System/blob/main/frontend/public/713.png)
-
 ---
 
 ## 🤝 Contributing
@@ -197,6 +196,12 @@ Contributions are welcome! To propose a change:
 Please review coding style in the respective app READMEs:
 - Backend: `backend/README.md`
 - Frontend: `frontend/README.md`
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
