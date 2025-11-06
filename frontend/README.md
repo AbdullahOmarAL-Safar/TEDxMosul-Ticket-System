@@ -249,15 +249,6 @@ The frontend communicates with the NestJS backend via **Axios**:
 
 ---
 
-## 🖼️ Screenshots / Preview
-
-> See actual screenshots in the root README or at:
-> - [Homepage](public/123.png)
-> - [Seat Selection](public/314.png)
-> - [Admin Dashboard](public/713.png)
-
----
-
 ## 🚧 Future Enhancements
 
 - [ ] Real-time booking updates via WebSockets

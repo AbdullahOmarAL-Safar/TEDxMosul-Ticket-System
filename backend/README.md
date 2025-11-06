@@ -1,98 +1,426 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+<div align="center">
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# 🛠️ TEDxMosul Ticket System – Backend API
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+NestJS REST API for event management, ticket booking, and admin operations.
 
-## Description
+![NestJS](https://img.shields.io/badge/NestJS-11.x-e0234e?logo=nestjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?logo=postgresql&logoColor=white)
+![TypeORM](https://img.shields.io/badge/TypeORM-0.3-orange?logo=typeorm&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens&logoColor=white)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+</div>
 
-## Project setup
+---
 
-```bash
-$ npm install
+## 🎯 Project Title and Purpose
+
+The **TEDxMosul Ticket System Backend** is a production-ready RESTful API built with NestJS and PostgreSQL. It handles user authentication, event management, ticket bookings with approval workflows, speaker profiles, and role-based access control (RBAC) for admin operations.
+
+---
+
+## 🧩 Key Modules
+
+| Module       | Responsibility |
+|--------------|----------------|
+| **Auth**     | User registration, login, JWT token generation, Passport strategies |
+| **Users**    | User CRUD, role management, profile retrieval |
+| **Events**   | Event creation, updates, listings, capacity management |
+| **Bookings** | Ticket booking, approval/rejection, QR verification, check-in |
+| **Speakers** | Speaker profiles, bio management, event linking |
+| **Database** | Database configuration, migrations, and seeding |
+
+---
+
+## 📁 Project Structure
+
+```
+backend/
+├─ src/
+│  ├─ auth/
+│  │  ├─ auth.controller.ts       # POST /auth/register, /auth/login
+│  │  ├─ auth.service.ts          # Password hashing, JWT signing
+│  │  ├─ jwt.strategy.ts          # Passport JWT validation
+│  │  ├─ jwt-auth.guard.ts        # Route protection guard
+│  │  ├─ roles.guard.ts           # Role-based access guard
+│  │  └─ dto/                     # Login, Register DTOs
+│  │
+│  ├─ users/
+│  │  ├─ user.entity.ts           # User schema (id, email, role, password)
+│  │  ├─ users.controller.ts      # User endpoints
+│  │  ├─ users.service.ts         # User business logic
+│  │  └─ dto/                     # CreateUser, UpdateUserRole DTOs
+│  │
+│  ├─ events/
+│  │  ├─ event.entity.ts          # Event schema (title, date, capacity)
+│  │  ├─ events.controller.ts     # Event CRUD endpoints
+│  │  ├─ events.service.ts        # Event business logic
+│  │  └─ dto/                     # CreateEvent, UpdateEvent DTOs
+│  │
+│  ├─ bookings/
+│  │  ├─ booking.entity.ts        # Booking schema (user, event, status)
+│  │  ├─ bookings.controller.ts   # Booking CRUD + approve/reject
+│  │  ├─ bookings.service.ts      # Booking logic + capacity checks
+│  │  └─ dto/                     # CreateBooking DTO
+│  │
+│  ├─ speakers/
+│  │  ├─ speaker.entity.ts        # Speaker schema (name, bio, socials)
+│  │  ├─ speakers.controller.ts   # Speaker CRUD endpoints
+│  │  ├─ speakers.service.ts      # Speaker business logic
+│  │  └─ dto/                     # CreateSpeaker, UpdateSpeaker DTOs
+│  │
+│  ├─ database/
+│  │  ├─ database.module.ts       # Database configuration
+│  │  └─ seed.service.ts          # Database seeding (admin, events, speakers)
+│  │
+│  ├─ app.module.ts               # Root module (imports all modules)
+│  └─ main.ts                     # Bootstrap (CORS, port, ValidationPipe)
+│
+├─ .env                           # Environment variables
+├─ package.json
+├─ tsconfig.json
+└─ nest-cli.json
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## 🔧 Environment Variables
 
-# watch mode
-$ npm run start:dev
+Create a `.env` file in the `backend/` directory:
 
-# production mode
-$ npm run start:prod
+```env
+PORT=4000
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=postgres
+DATABASE_PASSWORD=your_password
+DATABASE_NAME=tedxmosul_db
+JWT_SECRET=your_secret_key_change_in_production
+FRONTEND_URL=http://localhost:3000
 ```
 
-## Run tests
+**Variables:**
+- `PORT` – Backend server port (default: 4000)
+- `DATABASE_*` – PostgreSQL connection details
+- `JWT_SECRET` – Secret key for signing JWT tokens
+- `FRONTEND_URL` – CORS allowed origin
+
+---
+
+## 🛠️ Installation Steps
+
+**Prerequisites:**
+- Node.js 18+ and npm
+- PostgreSQL 13+ running locally
+
+**Steps:**
 
 ```bash
-# unit tests
-$ npm run test
+# Navigate to backend directory
+cd backend
 
-# e2e tests
-$ npm run test:e2e
+# Install dependencies
+npm install
 
-# test coverage
-$ npm run test:cov
+# Start development server with hot-reload
+npm run start:dev
+
+# Server will run on http://localhost:4000
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 🗄️ Database Setup
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Automatic Seeding
+
+The application uses TypeORM's `synchronize: true` for development and automatically seeds initial data on startup via `SeedService`.
+
+**What gets seeded:**
+- **Admin User**: `admin@tedxmosul.com` / `admin123` (Role: Admin)
+- **Sample Events**: 2-3 TEDx events with capacity and dates
+- **Sample Speakers**: Speaker profiles with bios and social links
+
+### Manual Database Creation
+
+If the database doesn't exist:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Connect to PostgreSQL
+psql -U postgres
+
+# Create database
+CREATE DATABASE tedxmosul_db;
+
+# Exit psql
+\q
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Production Migrations
 
-## Resources
+For production, disable `synchronize` and use migrations:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+# Generate migration
+npm run migration:generate -- -n InitialSchema
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Run migrations
+npm run migration:run
+```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 🔌 API Endpoints Overview
 
-## Stay in touch
+### Authentication (`/auth`)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+| Method | Endpoint           | Description          | Auth Required |
+|--------|--------------------|----------------------|---------------|
+| POST   | `/auth/register`   | Register new user    | ❌            |
+| POST   | `/auth/login`      | Login (get JWT)      | ❌            |
 
-## License
+### Users (`/users`)
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+| Method | Endpoint                  | Description              | Role Required |
+|--------|---------------------------|--------------------------|---------------|
+| GET    | `/users/me`               | Get current user profile | User          |
+| GET    | `/users`                  | List all users           | Admin         |
+| GET    | `/users/:id/bookings-info`| User booking stats       | Admin         |
+| PATCH  | `/users/:id/role`         | Update user role         | Admin         |
+| DELETE | `/users/:id`              | Delete user              | Admin         |
+
+### Events (`/events`)
+
+| Method | Endpoint        | Description              | Role Required |
+|--------|-----------------|--------------------------|---------------|
+| GET    | `/events`       | List all events          | Public        |
+| GET    | `/events/:id`   | Get event details        | Public        |
+| GET    | `/events/:id/seats` | Get available seats  | Public        |
+| POST   | `/events`       | Create new event         | Admin/Staff   |
+| PUT    | `/events/:id`   | Update event             | Admin/Staff   |
+| DELETE | `/events/:id`   | Delete event             | Admin         |
+
+### Bookings (`/bookings`)
+
+| Method | Endpoint                  | Description              | Role Required |
+|--------|---------------------------|--------------------------|---------------|
+| POST   | `/bookings`               | Create booking (pending) | User          |
+| GET    | `/bookings/me`            | My bookings              | User          |
+| GET    | `/bookings`               | All bookings (admin)     | Admin/Staff   |
+| POST   | `/bookings/:id/approve`   | Approve booking          | Admin/Staff   |
+| POST   | `/bookings/:id/reject`    | Reject booking           | Admin/Staff   |
+| POST   | `/bookings/:id/checkin`   | Check-in booking         | Staff         |
+| GET    | `/bookings/verify/:code`  | Verify QR code           | Staff         |
+| DELETE | `/bookings/:id`           | Cancel booking           | User/Admin    |
+
+### Speakers (`/speakers`)
+
+| Method | Endpoint           | Description          | Role Required |
+|--------|--------------------|----------------------|---------------|
+| GET    | `/speakers`        | List all speakers    | Public        |
+| GET    | `/speakers/:id`    | Get speaker details  | Public        |
+| POST   | `/speakers`        | Create speaker       | Admin/Staff   |
+| PUT    | `/speakers/:id`    | Update speaker       | Admin/Staff   |
+| DELETE | `/speakers/:id`    | Delete speaker       | Admin         |
+
+---
+
+## 🔐 Authentication & Authorization Flow
+
+### 1. Registration
+```typescript
+POST /auth/register
+Body: { name, email, password }
+→ Password hashed with bcrypt (10 rounds)
+→ User created with default 'user' role
+→ Returns: { message: "User registered" }
+```
+
+### 2. Login
+```typescript
+POST /auth/login
+Body: { email, password }
+→ Password validated with bcrypt.compare()
+→ JWT signed with payload: { sub: userId, email, role }
+→ Returns: { access_token: "jwt_token", user: {...} }
+```
+
+### 3. Protected Routes
+```typescript
+// In controller
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.Admin)
+@Get('admin-only')
+adminRoute() { ... }
+
+// JWT extracted from Authorization: Bearer <token>
+// User payload injected via @Request() req
+```
+
+### 4. Role-Based Access
+
+**Roles:**
+- `user` – Default role, can book tickets
+- `staff` – Can approve bookings, check-in attendees
+- `admin` – Full access to all operations
+
+---
+
+## 🛡️ Security Features
+
+✅ **Password Hashing**
+- Bcrypt with 10 salt rounds
+- Plain passwords never stored
+
+✅ **JWT Authentication**
+- Stateless token-based auth
+- Payload includes user ID, email, role
+- Token validation via Passport strategy
+
+✅ **CORS Configuration**
+- Allowed origins: `http://localhost:3000`, `http://localhost:3001`, `http://localhost:5173`
+- Credentials enabled for cookie support
+
+✅ **Input Validation**
+- `ValidationPipe` enabled globally
+- DTOs use `class-validator` decorators
+- Automatic whitelist and transformation
+
+✅ **SQL Injection Protection**
+- TypeORM parameterized queries
+- No raw SQL without sanitization
+
+✅ **Role Guards**
+- Decorator-based role enforcement
+- Centralized access control logic
+
+---
+
+## 🧪 Testing / Postman Collection (Optional)
+
+### Quick API Test with cURL
+
+**Register:**
+```bash
+curl -X POST http://localhost:4000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@example.com","password":"password123"}'
+```
+
+**Login:**
+```bash
+curl -X POST http://localhost:4000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@tedxmosul.com","password":"admin123"}'
+```
+
+**Get Events:**
+```bash
+curl http://localhost:4000/events
+```
+
+**Create Booking (with JWT):**
+```bash
+curl -X POST http://localhost:4000/bookings \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"eventId":"event-uuid","numberOfTickets":2}'
+```
+
+---
+
+## 🌱 Seeding Information
+
+### Default Admin Account
+
+After first run, the following admin account is available:
+
+```
+Email: admin@tedxmosul.com
+Password: admin123
+Role: admin
+```
+
+⚠️ **Change this password in production!**
+
+### Sample Data
+
+The seed service creates:
+- 2-3 sample TEDx events
+- 3-4 speaker profiles
+- Event-speaker relationships
+
+To re-seed (drops existing data):
+```bash
+# Stop server, delete database, restart
+npm run start:dev
+```
+
+---
+
+## 🚀 Deployment Notes
+
+### Production Build
+
+```bash
+# Build the application
+npm run build
+
+# Start production server
+npm run start:prod
+```
+
+### Production Checklist
+
+- [ ] Set `synchronize: false` in TypeORM config
+- [ ] Use migrations instead of auto-sync
+- [ ] Set strong `JWT_SECRET` (64+ random chars)
+- [ ] Update `FRONTEND_URL` to production domain
+- [ ] Enable HTTPS
+- [ ] Set up database backups
+- [ ] Configure logging (Winston/Pino)
+- [ ] Set up monitoring (Sentry, Datadog)
+- [ ] Use environment-specific configs
+- [ ] Change default admin password
+
+### Environment Variables (Production)
+
+```env
+PORT=4000
+NODE_ENV=production
+DATABASE_HOST=your-db-host
+DATABASE_PORT=5432
+DATABASE_USER=your-db-user
+DATABASE_PASSWORD=strong-password
+DATABASE_NAME=tedxmosul_prod
+JWT_SECRET=super-secret-64-char-random-string
+FRONTEND_URL=https://yourdomain.com
+```
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**. See the [LICENSE](../LICENSE) file for details.
+
+---
+
+## 🙌 Credits
+
+Built with ❤️ for **TEDx Mosul** by [Abdullah Omar AL-Safar](https://github.com/AbdullahOmarAL-Safar)
+
+**Tech Stack:**
+- [NestJS](https://nestjs.com/) – Progressive Node.js framework
+- [TypeORM](https://typeorm.io/) – ORM for TypeScript
+- [PostgreSQL](https://www.postgresql.org/) – Relational database
+- [Passport](http://www.passportjs.org/) – Authentication middleware
+- [Bcrypt](https://github.com/kelektiv/node.bcrypt.js) – Password hashing
+
+---
+
+<div align="center">
+
+**🛠️ Built with NestJS • 🔐 Secure by Design • 📦 Production Ready**
+
+</div>
